@@ -3,10 +3,9 @@ class Data {
   String title;
   String writer;
   String content;
-  String createTime;
-  DateTime time;
+  DateTime createTime;
 
-  Data(this.title, this.writer, this.content, this.createTime, this.time);
+  Data(this.title, this.writer, this.content, this.createTime);
 
   toJson() {
     return {
@@ -17,17 +16,6 @@ class Data {
     };
   }
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
-        json['title'],
-        json['writer'],
-        json['content'],
-        json['createTime'],
-        DateTime(
-          int.parse(json['createTime'].toString().substring(0, 4)),
-          int.parse(json['createTime'].toString().substring(5, 7)),
-          int.parse(json['createTime'].toString().substring(8, 10)),
-          int.parse(json['createTime'].toString().substring(11, 13)),
-          int.parse(json['createTime'].toString().substring(14, 16)),
-        ),
-      );
+  factory Data.fromJson(Map<String, dynamic> json) => Data(json['title'],
+      json['writer'], json['content'], json['createTime'].toDate());
 }

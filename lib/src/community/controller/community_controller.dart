@@ -17,6 +17,21 @@ class CommunityController extends GetxController {
     });
   }
 
+  void loadData() async {
+    var now = DateTime.now();
+    await FirebaseFirestore.instance
+        .collection('community')
+        .limit(10)
+        .where('createTime',
+            isGreaterThan: DateTime(now.year, now.month, now.day))
+        .get()
+        .then((value) => value.docs.forEach((element) {
+              print(element['title']);
+              print(element['content']);
+              print(element['createTime']);
+            }));
+  }
+
   void addData(Data addData) async {
     await FirebaseFirestore.instance
         .collection('community')
@@ -38,6 +53,34 @@ class CommunityController extends GetxController {
     } else {
       return '${_time.toString().substring(0, 10)}';
     }
+  }
+
+  void sortList() {
+    dataList.sort((a, b) => b.createTime.compareTo(a.createTime));
+  }
+
+  void timeStampTest() async {
+    FirebaseFirestore.instance
+        .collection('community')
+        .where('time', isNull: false)
+        .get()
+        .then((value) => value.docs.forEach((element) {
+              print(element['time'].toString());
+              print(element['time'].toDate().toString());
+            }));
+  }
+
+  void loadDataTest() async {
+    await FirebaseFirestore.instance
+        .collection('community')
+        .where('title', isEqualTo: 'my today')
+        .get()
+        .then((value) => value.docs.forEach((element) {
+              print(element['timaRange']['startHour']);
+              print(element['timaRange']['startMinute']);
+              print(element['timaRange']['endHour']);
+              print(element['timaRange']['endMinute']);
+            }));
   }
 
   @override

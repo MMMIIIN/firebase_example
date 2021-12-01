@@ -35,8 +35,7 @@ class AddCommunityPage extends StatelessWidget {
                   _communityController.addData(Data(
                       _titleController.value.text, 'writer',
                       _contentController.value.text,
-                      DateTime.now().toIso8601String(),
-                    DateTime.now()
+                      DateTime.now()
                   ));
                   Get.back();
                 },
