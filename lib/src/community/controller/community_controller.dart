@@ -2,8 +2,25 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_example/src/community/data/community_data.dart';
 import 'package:get/get.dart';
 
+enum COMMUNITY_LIST { FREE, MY_LIFE, MOTIVATION }
+
+extension CommunityExtension on COMMUNITY_LIST {
+  String get communityName {
+    switch (this) {
+      case COMMUNITY_LIST.FREE:
+        return '자유게시판';
+      case COMMUNITY_LIST.MY_LIFE:
+        return '나의 하루';
+      case COMMUNITY_LIST.MOTIVATION:
+        return '동기부여';
+    }
+  }
+}
+
 class CommunityController extends GetxController {
+  var communityTabIndex = 0.obs;
   var dataList = <Data>[].obs;
+  var myLifeDataList = <MyLifeData>[].obs;
 
   void initLoadDataList() async {
     dataList.clear();
