@@ -53,8 +53,15 @@ class Todo {
   int color;
   DateTime dateTime;
   TimeOfRange timeOfRange;
+  int value;
 
-  Todo(this.title, this.color, this.dateTime, this.timeOfRange);
+  Todo(
+      {required this.title,
+        required this.color,
+        required this.dateTime,
+        required this.timeOfRange,
+        required this.value
+      });
 
   toJson() {
     return {
@@ -65,12 +72,32 @@ class Todo {
     };
   }
 
-  factory Todo.fromJson(Map<String, dynamic> json) => Todo(
-        json['title'],
-        json['color'],
-        json['dateTime'].toDate(),
-        TimeOfRange.fromJson(json['timeOfRange']),
-      );
+  factory Todo.fromJson(Map<String, dynamic> json) {
+    var date1 = DateTime(
+        2021,
+        1,
+        1,
+        json['timeOfRange']['startHour'],
+      json['timeOfRange']['startMinute']);
+    var date2 = DateTime(
+        2021,
+        1,
+        1,
+        json['timeOfRange']['endHour'],
+      json['timeOfRange']['endMinute']);
+    var value = date2.difference(date1).inMinutes;
+    if(value < 0) {
+      value += 1440;
+    }
+
+    return Todo(
+      title: json['title'],
+      color: json['color'],
+      dateTime: json['dateTime'].toDate(),
+      timeOfRange: TimeOfRange.fromJson(json['timeOfRange']),
+      value: value
+    );
+  }
 }
 
 class TimeOfRange {
