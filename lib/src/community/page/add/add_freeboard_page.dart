@@ -33,11 +33,11 @@ class AddFreeBoardPage extends StatelessWidget {
               ),
               MaterialButton(
                 onPressed: () {
-                  _freeBoardController.addFreeBoardData(FreeBoardData(
+                  _freeBoardController.addFreeBoardData(AddFreeBoardDataDto(
                       title: titleController.value.text,
                       content: contentController.value.text,
                       writer: '익명',
-                      createAt: DateTime.now()));
+                      createAt: DateTime.now().toIso8601String()));
                   titleController.clear();
                   contentController.clear();
                   Get.back();
