@@ -18,15 +18,6 @@ class FreeBoardData {
       required this.heart,
       required this.comment});
 
-  // toJson() {
-  //   return {
-  //     'title': title,
-  //     'content': content,
-  //     'writer': writer,
-  //     'createAt': createAt
-  //   };
-  // }
-
   factory FreeBoardData.fromJson(Map<String, dynamic> json, String key) {
     return FreeBoardData(
         key: key,

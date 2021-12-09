@@ -1,25 +1,17 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_example/src/community/data/free_board_comment_data.dart';
 import 'package:firebase_example/src/community/data/free_board_data.dart';
 import 'package:get/get.dart';
 
 class FreeBoardController extends GetxController {
   var dataList = <FreeBoardData>[].obs;
   var heartList = [].obs;
+  var commentList = <FreeBoardComment>[].obs;
 
   FirebaseDatabase? _database;
   DatabaseReference? reference;
   DatabaseReference? heartListReference;
   String _databaseURL = 'https://example-f3334-default-rtdb.firebaseio.com/';
-
-  void initLoadFreeBoardData() async {
-    await FirebaseFirestore.instance
-        .collection('FREE_BOARD')
-        .get()
-        .then((value) => value.docs.forEach((data) {
-              dataList.add(FreeBoardData.fromJson(data.data(), data.id));
-            }));
-  }
 
   void plusHeartCount(String uid) async {
     var currentCount = 0;
@@ -85,8 +77,30 @@ class FreeBoardController extends GetxController {
         .child(uid)
         .remove()
         .then((value) {
-
       heartList.removeWhere((element) => element == uid);
+    });
+  }
+
+  void addComment(String uid, FreeBoardComment comment) async {
+    await FirebaseDatabase.instance
+        .reference()
+        .child('FREE_BOARD')
+        .child(uid)
+        .child('comment_list')
+        .push()
+        .set(comment.toJson());
+  }
+
+  void loadCommentList(String uid) {
+    commentList.clear();
+    FirebaseDatabase.instance
+        .reference()
+        .child('FREE_BOARD')
+        .child(uid)
+        .child('comment_list')
+        .onChildAdded
+        .listen((event) {
+      commentList.add(FreeBoardComment.fromSnapshot(event.snapshot));
     });
   }
 
@@ -106,11 +120,5 @@ class FreeBoardController extends GetxController {
     heartListReference!.onChildAdded.listen((event) {
       heartList.add(event.snapshot.key);
     });
-    //
-    // heartListReference!.onChildRemoved.listen((event) {
-    //   setState(() {
-    //     _freeBoardController.heartList.remove(event.snapshot.key);
-    //   });
-    // });
   }
 }
