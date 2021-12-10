@@ -8,14 +8,19 @@ class FreeBoardComment {
   String createAt;
   int depth;
   String parentId;
+  bool isRecomment;
+  int recommentCount;
 
-  FreeBoardComment(
-      {required this.boardId,
-      required this.writer,
-      required this.comment,
-      required this.createAt,
-      required this.depth,
-      this.parentId = ''});
+  FreeBoardComment({
+    required this.boardId,
+    required this.writer,
+    required this.comment,
+    required this.createAt,
+    required this.depth,
+    this.parentId = '',
+    this.isRecomment = false,
+    this.recommentCount = 0,
+  });
 
   toJson() {
     return {
@@ -35,5 +40,7 @@ class FreeBoardComment {
         comment = snapshot.value['comment'],
         createAt = snapshot.value['createAt'],
         depth = snapshot.value['depth'],
-        parentId = snapshot.value['parentId'];
+        parentId = snapshot.value['parentId'],
+        isRecomment = false,
+        recommentCount = snapshot.value['recommentCount'] ?? 0;
 }

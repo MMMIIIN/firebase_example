@@ -27,6 +27,7 @@ class FreeBoardDetailPage extends StatefulWidget {
 
 class _FreeBoardDetailPageState extends State<FreeBoardDetailPage> {
   final commentController = TextEditingController();
+  final recommentController = TextEditingController();
   var commentStyle = TextStyle(fontSize: 20);
   var writerStyle = TextStyle(fontSize: 16, fontWeight: FontWeight.w200);
 
@@ -99,19 +100,19 @@ class _FreeBoardDetailPageState extends State<FreeBoardDetailPage> {
                     )),
               ),
             ),
-            MaterialButton(
-              onPressed: () async {
-                // print(commentList.length);
-              },
-              color: Colors.orangeAccent,
-            ),
+            SizedBox(height: 30),
+            // MaterialButton(
+            //     onPressed: () {
+            //       _freeBoardController.loadEqualTest(widget.boardUid);
+            //     },
+            //     color: Colors.orange),
             Expanded(
               child: Obx(
                 () => ListView.builder(
                   itemCount: _freeBoardController.commentList.length,
                   itemBuilder: (context, index) {
                     return Container(
-                      height: 100,
+                      // height: 100,
                       child: Column(
                         children: [
                           Row(
@@ -133,20 +134,21 @@ class _FreeBoardDetailPageState extends State<FreeBoardDetailPage> {
                                   Row(
                                     children: [
                                       Text(
-                                          '${_freeBoardController.commentList[index].writer}',
-                                          style: writerStyle),
+                                        '${_freeBoardController.commentList[index].writer}',
+                                        // style: writerStyle,
+                                      ),
                                       SizedBox(width: 10),
                                       Text(
                                         '${_freeBoardController.commentList[index].createAt.substring(0, 10)}',
                                         style: TextStyle(
                                             fontWeight: FontWeight.w300,
-                                        fontSize: 12),
+                                            fontSize: 12),
                                       )
                                     ],
                                   ),
                                   Text(
-                                      '${_freeBoardController.commentList[index].comment}',
-                                      style: commentStyle,
+                                    '${_freeBoardController.commentList[index].comment}',
+                                    // style: commentStyle,
                                   ),
                                 ],
                               ),
@@ -158,9 +160,68 @@ class _FreeBoardDetailPageState extends State<FreeBoardDetailPage> {
                                 Icons.favorite_border,
                                 color: Colors.red,
                               ),
-                              Text('답글 달기'),
+                              MaterialButton(
+                                onPressed: () {
+                                  setState(() {
+                                    var trueIndex = _freeBoardController
+                                        .commentList
+                                        .indexWhere((element) =>
+                                            element.isRecomment == true);
+                                    if (trueIndex != -1) {
+                                      _freeBoardController
+                                          .commentList[trueIndex]
+                                          .isRecomment = false;
+                                    }
+                                    _freeBoardController
+                                        .commentList[index].isRecomment = true;
+                                  });
+                                },
+                                child: Text('답글 달기'),
+                              ),
                             ],
-                          )
+                          ),
+                          _freeBoardController.commentList[index].isRecomment
+                              ? Container(
+                                  height: 60,
+                                  child: TextField(
+                                    controller: recommentController,
+                                    decoration: InputDecoration(
+                                      suffixIcon: IconButton(
+                                        icon: Icon(Icons.comment),
+                                        onPressed: () {
+                                          _freeBoardController.addComment(
+                                            widget.boardUid,
+                                            FreeBoardComment(
+                                                boardId: widget.boardUid,
+                                                writer: 'writer',
+                                                comment: recommentController
+                                                    .value.text,
+                                                createAt: DateTime.now()
+                                                    .toIso8601String(),
+                                                parentId: _freeBoardController
+                                                    .commentList[index].key!,
+                                                depth: 1),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : Container(),
+                          _freeBoardController
+                                      .commentList[index].recommentCount !=
+                                  0
+                              ? MaterialButton(
+                                  onPressed: () {
+                                    _freeBoardController.loadEqualTest(
+                                        widget.boardUid,
+                                        _freeBoardController
+                                            .commentList[index].key!);
+                                  },
+                                  child: Text(
+                                      '답글 ${_freeBoardController.commentList[index].recommentCount}개'),
+                                )
+                              : Container()
                         ],
                       ),
                     );

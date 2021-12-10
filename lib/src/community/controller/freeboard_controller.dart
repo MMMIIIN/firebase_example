@@ -89,6 +89,16 @@ class FreeBoardController extends GetxController {
         .child('comment_list')
         .push()
         .set(comment.toJson());
+    if(comment.parentId.isNotEmpty) {
+      var dataIndex = commentList.indexWhere((element) => element.key == comment.parentId);
+      var count = commentList[dataIndex].recommentCount + 1;
+      FirebaseDatabase.instance
+          .reference().child('FREE_BOARD')
+          .child(uid)
+          .child('comment_list')
+          .child(comment.parentId)
+          .update({'recommentCount': count});
+    }
   }
 
   void loadCommentList(String uid) {
@@ -98,10 +108,24 @@ class FreeBoardController extends GetxController {
         .child('FREE_BOARD')
         .child(uid)
         .child('comment_list')
+        .orderByChild('parentId')
+        .equalTo('')
         .onChildAdded
         .listen((event) {
       commentList.add(FreeBoardComment.fromSnapshot(event.snapshot));
     });
+  }
+
+  void loadEqualTest(String uid, String commentUid) async {
+    await FirebaseDatabase.instance
+        .reference()
+        .child('FREE_BOARD')
+        .child(uid)
+        .child('comment_list')
+        .orderByChild('parentId')
+        .equalTo(commentUid)
+        .once()
+        .then((value) => print(value.value));
   }
 
   @override

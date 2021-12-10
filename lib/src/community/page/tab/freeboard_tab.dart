@@ -19,7 +19,7 @@ class _FreeBoardTabState extends State<FreeBoardTab> {
       children: [
         Expanded(
           child: Obx(
-            () => _freeBoardController.dataList.isEmpty ? CircularProgressIndicator() : ListView.builder(
+            () => _freeBoardController.dataList.isEmpty ? Center(child: CircularProgressIndicator()) : ListView.builder(
               itemCount: _freeBoardController.dataList.length,
               itemBuilder: (context, index) {
                 return Padding(
