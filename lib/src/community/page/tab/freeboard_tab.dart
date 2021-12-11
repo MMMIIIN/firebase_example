@@ -84,7 +84,8 @@ class _FreeBoardTabState extends State<FreeBoardTab> {
                               Icon(
                                 Icons.chat_bubble_outline,
                                 color: Colors.blueAccent,
-                              )
+                              ),
+                              Text('${_freeBoardController.dataList[index].comment}')
                             ],
                           )
                         ],
