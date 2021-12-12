@@ -32,6 +32,7 @@ class _FreeBoardTabState extends State<FreeBoardTab> {
                         content: _freeBoardController.dataList[index].content,
                         writer: _freeBoardController.dataList[index].writer,
                         heartUid: _freeBoardController.dataList[index].key!,
+                        imagePath: _freeBoardController.dataList[index].imagePath,
                       ));
                     },
                     child: Container(

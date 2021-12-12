@@ -11,6 +11,7 @@ class FreeBoardDetailPage extends StatefulWidget {
   String content;
   String writer;
   String heartUid;
+  String? imagePath;
 
   FreeBoardDetailPage({
     required this.boardUid,
@@ -18,6 +19,7 @@ class FreeBoardDetailPage extends StatefulWidget {
     required this.content,
     required this.writer,
     required this.heartUid,
+    this.imagePath,
   });
 
   @override
@@ -59,6 +61,9 @@ class _FreeBoardDetailPageState extends State<FreeBoardDetailPage> {
                 '${widget.content}',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w200),
               ),
+              widget.imagePath!.isNotEmpty
+                  ? Image.network('${widget.imagePath}')
+                  : Container(),
               Row(
                 children: [
                   Obx(() => _freeBoardController.heartList

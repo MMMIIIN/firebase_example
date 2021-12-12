@@ -8,34 +8,28 @@ class FreeBoardData {
   String createAt;
   int heart;
   int comment;
+  String? imagePath;
 
-  FreeBoardData(
-      {this.key,
-      required this.title,
-      required this.content,
-      required this.writer,
-      required this.createAt,
-      required this.heart,
-      required this.comment});
+  FreeBoardData({
+    this.key,
+    required this.title,
+    required this.content,
+    required this.writer,
+    required this.createAt,
+    required this.heart,
+    required this.comment,
+    this.imagePath,
+  });
 
-  factory FreeBoardData.fromJson(Map<String, dynamic> json, String key) {
-    return FreeBoardData(
-        key: key,
-        title: json['title'],
-        content: json['content'],
-        writer: json['writer'],
-        createAt: json['createAt'].toString(),
-        heart: json['heart'],
-        comment: json['comment']);
-  }
-
-  FreeBoardData.fromSnapshot(DataSnapshot snapshot) : key = snapshot.key,
-  title = snapshot.value['title'],
-  content = snapshot.value['content'],
-  writer = snapshot.value['writer'],
-  createAt = snapshot.value['createAt'],
-  heart = snapshot.value['heart'],
-  comment = snapshot.value['comment'];
+  FreeBoardData.fromSnapshot(DataSnapshot snapshot)
+      : key = snapshot.key,
+        title = snapshot.value['title'],
+        content = snapshot.value['content'],
+        writer = snapshot.value['writer'],
+        createAt = snapshot.value['createAt'],
+        heart = snapshot.value['heart'],
+        comment = snapshot.value['comment'],
+        imagePath = snapshot.value['imagePath'] ?? '';
 }
 
 class AddFreeBoardDataDto {
@@ -45,14 +39,17 @@ class AddFreeBoardDataDto {
   String createAt;
   int heart;
   int comment;
+  String? imagePath;
 
-  AddFreeBoardDataDto(
-      {required this.title,
-      required this.content,
-      required this.writer,
-      required this.createAt,
-      this.heart = 0,
-      this.comment = 0});
+  AddFreeBoardDataDto({
+    required this.title,
+    required this.content,
+    required this.writer,
+    required this.createAt,
+    this.heart = 0,
+    this.comment = 0,
+    this.imagePath,
+  });
 
   toJson() {
     return {
@@ -61,7 +58,8 @@ class AddFreeBoardDataDto {
       'writer': writer,
       'createAt': createAt,
       'heart': heart,
-      'comment': comment
+      'comment': comment,
+      'imagePath': imagePath,
     };
   }
 }

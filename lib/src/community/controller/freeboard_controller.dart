@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_example/src/community/data/free_board_comment_data.dart';
 import 'package:firebase_example/src/community/data/free_board_data.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 
 class FreeBoardController extends GetxController {
@@ -99,7 +102,7 @@ class FreeBoardController extends GetxController {
         .update({'comment': ++commentCount});
 
     var dataIndex = dataList.indexWhere((element) => element.key == uid);
-    if(dataIndex != -1){
+    if (dataIndex != -1) {
       dataList[dataIndex].comment = commentCount;
     }
   }
@@ -157,6 +160,26 @@ class FreeBoardController extends GetxController {
         .listen((event) {
       recommentList.add(FreeBoardComment.fromSnapshot(event.snapshot));
     });
+  }
+
+  Future uploadFile(String imagePath, AddFreeBoardDataDto _data) async {
+    try {
+      final firebaseStorageRef = FirebaseStorage.instance
+          .ref()
+          .child('post')
+          .child('${DateTime.now().millisecondsSinceEpoch}.png');
+
+      final uploadTask = firebaseStorageRef.putFile(
+          File(imagePath), SettableMetadata(contentType: 'image/png'));
+
+      await uploadTask.whenComplete(() => null);
+
+      final downloadUrl = await firebaseStorageRef.getDownloadURL();
+
+      addFreeBoardData(_data..imagePath = downloadUrl);
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
